@@ -15,7 +15,7 @@
     <Port>5432</Port>
     <UserName>postgres</UserName>
     <Password>coolcomp</Password>
-    <Database>extract</Database>
+    <Database>demo</Database>
     <IntegratedSecurity>false</IntegratedSecurity>
   </DestinationConnection>
 </Connections>
