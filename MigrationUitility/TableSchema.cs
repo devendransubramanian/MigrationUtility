@@ -10,5 +10,6 @@ namespace MigrationUitility
     {
         public string SchemaName { get; set; }
         public string TableName { get; set; }
+        public string DBName { get; set; }
     }
 }
