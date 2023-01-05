@@ -53,8 +53,9 @@ namespace MigrationUitility
             string query = GetAllSchemaTables();
             if (!string.IsNullOrEmpty(schema) && !string.IsNullOrEmpty(tablename))
             {
-                query= string.Format("select schema_name(t.schema_id) as schema_name,t.name as table_name, t.create_date,t.modify_date from sys.tables t where schema_name(t.schema_id)={0} and t.name={1} order by table_name",schema.TrimStart('[').TrimEnd(']'), tablename.TrimStart('[').TrimEnd(']'));
-            }                .Replace("[","")            var com = GetSqlCommandInstance(query, CommandType.Text);
+                query= string.Format("select schema_name(t.schema_id) as schema_name,t.name as table_name, t.create_date,t.modify_date from sys.tables t where schema_name(t.schema_id)='{0}' and t.name='{1}' order by table_name",schema.TrimStart('[').TrimEnd(']'), tablename.TrimStart('[').TrimEnd(']'));
+            }             
+                var com = GetSqlCommandInstance(query, CommandType.Text);
             using (SqlDataReader reader = SQLExecuteReader(com, this.SqlConnection))
             {
                 while (reader.Read())

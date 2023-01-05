@@ -19,23 +19,22 @@ namespace MigrationUitility
             String DatabaseName = "";
             if (!IsTextFileEmpty(databaseFile))
             {
-                using (StreamReader sr = new StreamReader(databaseFile))
-                {
-                    while (sr.Peek() >= 0)
-                    {
+               
+
                         StreamWriter exported = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + "\\ExportedList.txt", true);
                         StreamWriter exportFail = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + "\\ExportFailed.txt", true);
                         Console.WriteLine("Exporeted List in " + AppDomain.CurrentDomain.BaseDirectory + "\\ExportedList.txt");
                         Console.WriteLine("Export Failed List in " + AppDomain.CurrentDomain.BaseDirectory + "\\ExportFailed.txt");
-                        DatabaseName = sr.ReadLine();
+                       
                         #region ExportDatabase
                         Connections connectioninfo = FetchConnectionInfo();
-                        //create Database
-                        if (CreateDatabase(connectioninfo, DatabaseName))
+                DatabaseName = connectioninfo.DestinationConnection.Database;
+                //create Database
+                if (CreateDatabase(connectioninfo, DatabaseName))
                         {
                             Dictionary<string, object> sourceConnection = new Dictionary<string, object>();
 
-                            sourceConnection.Add("ConnectionString", "Server=" + connectioninfo.SourceConnection.ServerName + "," + connectioninfo.SourceConnection.Port + ";Database=" + DatabaseName + ";User Id=" + connectioninfo.SourceConnection.UserName + ";Password=" + connectioninfo.SourceConnection.Password + ";");
+                            sourceConnection.Add("ConnectionString", "Server=" + connectioninfo.SourceConnection.ServerName + "," + connectioninfo.SourceConnection.Port + ";Database=" + connectioninfo.SourceConnection.Database + ";User Id=" + connectioninfo.SourceConnection.UserName + ";Password=" + connectioninfo.SourceConnection.Password + ";");
                             sourceConnection.Add("ConnectionName", connectioninfo.SourceConnection.ConnectionName);
                             sourceConnection.Add("ServerName", connectioninfo.SourceConnection.ServerName);
                             sourceConnection.Add("Port", connectioninfo.SourceConnection.Port);
@@ -45,7 +44,7 @@ namespace MigrationUitility
                             sourceConnection.Add("Password", connectioninfo.SourceConnection.Password);
                             sourceConnection.Add("Database", DatabaseName);
                             Dictionary<string, object> destinationConnection = new Dictionary<string, object>();
-                            destinationConnection.Add("ConnectionString", "User ID=" + connectioninfo.DestinationConnection.UserName + ";Password=" + connectioninfo.DestinationConnection.Password + ";Server=" + connectioninfo.DestinationConnection.ServerName + ";Port=" + connectioninfo.DestinationConnection.Port + ";Database=" + DatabaseName.ToLower()+ ";SSL Mode=Require;Trust Server Certificate=True");
+                            destinationConnection.Add("ConnectionString", "User ID=" + connectioninfo.DestinationConnection.UserName + ";Password=" + connectioninfo.DestinationConnection.Password + ";Server=" + connectioninfo.DestinationConnection.ServerName + ";Port=" + connectioninfo.DestinationConnection.Port + ";Database=" + connectioninfo.SourceConnection.Database.ToLower()+ ";");
                             destinationConnection.Add("IntegratedSecurity", false);
                             destinationConnection.Add("IsEnableSSL", false);
                             destinationConnection.Add("ConnectionName", connectioninfo.DestinationConnection.ConnectionName);
@@ -63,15 +62,9 @@ namespace MigrationUitility
                             List<ExtractTableInfo> tableList = new List<ExtractTableInfo>();
                             var response = new Result();
                             List<TableSchema> getAllSchema = new List<TableSchema>();
-                            if(args!=null && args.Length == 1)
-                            {
-                                string[] tableSchema = args[0].Split('.');
-                                getAllSchema= sqlServerConnection.GetAllSchema(tableSchema[0], tableSchema[1]);
-                            }
-                            else
-                            {
+                           
                                 getAllSchema = sqlServerConnection.GetAllSchema();
-                            }
+                         
                             var tablelist = new ExtractTableInfo();                       
                             foreach (var table in getAllSchema)
                             {
@@ -155,8 +148,7 @@ namespace MigrationUitility
                             postgreSQLConnection.Dispose();
                             #endregion
                         }
-                    }
-                }
+                    
             }
             Console.WriteLine("Completed");
             Console.ReadKey();
@@ -179,7 +171,7 @@ namespace MigrationUitility
                 bool isDatabaseExist = false;
                 if (conn.State == ConnectionState.Closed)
                 {
-                    string conString = "Server=" + connectioninfo.DestinationConnection.ServerName + " ;Port=" + port + ";User Id=" + username + ";Password=" + password + ";Database=" + connectioninfo.DestinationConnection.Database+ ";SSL Mode=Require;Trust Server Certificate=True";
+                    string conString = "Server=" + connectioninfo.DestinationConnection.ServerName + " ;Port=" + port + ";User Id=" + username + ";Password=" + password + ";";
                     conn.ConnectionString = conString;
                     conn.Open();
                 }
@@ -191,6 +183,14 @@ namespace MigrationUitility
                 {
                     isDatabaseExist = true;
                     conn.Close();
+                    return true;
+                }
+                else
+                {
+                    command.CommandText = sql;
+                    command.Connection = conn;
+
+                     result =command.ExecuteNonQuery();
                     return true;
                 }
                     

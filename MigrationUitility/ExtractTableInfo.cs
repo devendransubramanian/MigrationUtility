@@ -8,8 +8,8 @@ namespace MigrationUitility
 {
     public class ExtractTableInfo
     {
-        public string Tablename { get; set; }
-        public ExtractTableSchemaInfo TableSchemaInformation { get; set; }
+        public string TableName { get; set; }
+        public ExtractTableSchemaInfo TableSchemaInfo { get; set; }
         public string LastModifiedDateColumn { get; set; }
 
         public List<string> PrimaryKey { get; set; }
@@ -18,6 +18,9 @@ namespace MigrationUitility
         public string SourceTableName { get; set; }
 
         public string OperationType { get; set; }
-        public List<ExtractParameter> Parameters { get; set; }
+        public List<ExtractParameter> Parameters
+        {
+            get; set;
+        }
     }
 }

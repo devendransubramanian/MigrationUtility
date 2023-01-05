@@ -112,7 +112,7 @@ namespace MigrationUitility
                     
                         var queryString = GenerateCreateTableQuery(schemaInfo, tableName, primaryKey);
                         var command = GetSqlCommandInstance(queryString, CommandType.Text);
-                        result.ReturnValue = command.ExecuteNonQuery();
+                command.ExecuteNonQuery();
                         result.Status = true;
                     }
                
@@ -133,7 +133,7 @@ namespace MigrationUitility
             {
          
                 var command = GetSqlCommandInstance(CreateSchemaQuery(schemaname), CommandType.Text);
-                result.ReturnValue = command.ExecuteNonQuery();
+                 command.ExecuteNonQuery();
                 result.Status = true;
             }
             catch (Exception e)

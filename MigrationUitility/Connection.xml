@@ -5,8 +5,8 @@
     <ServerName>localhost</ServerName>
     <Port>1433</Port>
     <UserName>sa</UserName>
-    <Password>sync@1234</Password>
-    <Database>e1f78fa2-95dc-4203-a19b-e0e728743c8b</Database>
+    <Password>sa@1234</Password>
+    <Database>russian</Database>
     <IntegratedSecurity>false</IntegratedSecurity>
   </SourceConnection>
   <DestinationConnection>
@@ -15,7 +15,7 @@
     <Port>5432</Port>
     <UserName>postgres</UserName>
     <Password>coolcomp</Password>
-    <Database>demo</Database>
+    <Database>russian</Database>
     <IntegratedSecurity>false</IntegratedSecurity>
   </DestinationConnection>
 </Connections>
